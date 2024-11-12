@@ -59,34 +59,19 @@ return;
 }
 
 $del = "DROP TABLE ACCOUNT CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
-
-$del = "DROP TABLE PRODUCT CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
-
-$del = "DROP TABLE MUSIC CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
-
-$del = "DROP TABLE MOVIE CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
-
-$del = "DROP TABLE CART_ITEM CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
-
-$del = "DROP TABLE REVIEW CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
-
-$del = "DROP TABLE CUSTOMER_ORDER CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
-
-$del = "DROP TABLE ORDER_ITEM CASCADE CONSTRAINTS;";
-mysqli_query($connect, $del);
+$del .= "DROP TABLE PRODUCT CASCADE CONSTRAINTS;";
+$del .= "DROP TABLE MUSIC CASCADE CONSTRAINTS;";
+$del .= "DROP TABLE MOVIE CASCADE CONSTRAINTS;";
+$del .= "DROP TABLE CART_ITEM CASCADE CONSTRAINTS;";
+$del .= "DROP TABLE REVIEW CASCADE CONSTRAINTS;";
+$del .= "DROP TABLE CUSTOMER_ORDER CASCADE CONSTRAINTS;";
+$del .= "DROP TABLE ORDER_ITEM CASCADE CONSTRAINTS;";
 
 
 if (mysqli_multi_query($connect, $del)) {
 print <<<HTMLCODE
 <header>
-SUCCESSFULLY POPULATED TABLE
+SUCCESSFULLY REMOVED Tables
 </header>
 <div>a</div>
 <section>
@@ -95,11 +80,11 @@ HTMLCODE;
 $errorMsg = mysqli_error($connect);
 print <<<HTMLCODE
 <header>
-FAILED TO POPULATE TABLE
+FAILED TO REMOVE TABLES
 </header>
 <div>a</div>
 <section>
-<p>FAILED TO ADD: $info<br>$errorMsg</p>
+<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
 HTMLCODE;
 }
 mysqli_close($connect);
