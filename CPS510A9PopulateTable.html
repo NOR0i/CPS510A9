@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo&family=Instrument+Serif&family=Jomolhari&family=Outfit&display=swap');
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    background-color: rgb(234, 234, 234);
+    color: rgb(41, 41, 41);
+    text-shadow: 0vw 0vw 0.2vw;
+    margin: 0;
+}
+
+header {
+    font-size: 6vw;
+    font-family: "Outfit";
+}
+
+div {
+    background-color: rgb(41, 41, 41);
+    font-size: 0.3vw;
+    box-shadow: 0vw 0vw 0.2vw;
+    margin-top: 2vw;
+    margin-bottom: 2vw;
+    width: 90%;
+}
+
+p {
+    font-family: "Outfit";
+    text-shadow: none;
+    font-size: 2vw;
+    text-shadow: 0vw 0vw 0.1vw;
+}
+</style>
+
+<body>
+<section style="margin: 2vw;">
+
+<?php
+$host = "localhost";
+$database = "s43ma";
+$user = "s43ma";
+$password = "mykjPExW";
+$connect = mysqli_connect($host, $user, $password, $database);
+
+if (!$connect) {
+print <<<HTMLCODE
+<header>
+CONNECTION FAILED
+</header>
+<div>a</div>
+<section>
+</section>
+</section>
+</body>
+</html>
+HTMLCODE;
+return;
+}
+
+$del = "DROP TABLE ACCOUNT CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$del = "DROP TABLE PRODUCT CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$del = "DROP TABLE MUSIC CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$del = "DROP TABLE MOVIE CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$del = "DROP TABLE CART_ITEM CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$del = "DROP TABLE REVIEW CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$del = "DROP TABLE CUSTOMER_ORDER CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$del = "DROP TABLE ORDER_ITEM CASCADE CONSTRAINTS;";
+mysqli_query($connect, $del);
+
+$sql = "CREATE TABLE account(
+	account_id INT PRIMARY KEY,
+	email VARCHAR(100) NOT NULL UNIQUE
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE accountInfo(
+    account_id INT PRIMARY KEY,
+    account_type VARCHAR2(10) DEFAULT 'CUSTOMER' NOT NULL CHECK (account_type IN ('CUSTOMER', 'MANAGER')),
+    password VARCHAR2(25) NOT NULL,
+    first_name VARCHAR2(25) NOT NULL,
+    last_name VARCHAR2(25) NOT NULL,
+    phone_number VARCHAR2(20),
+    address VARCHAR2(100)
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE product(
+    product_ID INT PRIMARY KEY,
+    name VARCHAR2(50) NOT NULL,
+    year INT NOT NULL CHECK (year > 0), 
+    image VARCHAR2(25),
+    price FLOAT NOT NULL,
+    stock INT NOT NULL CHECK (stock > 0),
+    message VARCHAR2(200)
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE music(
+    product_ID INT REFERENCES product(product_ID),
+    artist VARCHAR2(100) NOT NULL,
+    genre VARCHAR2(25) NOT NULL CHECK (genre IN ('Classical', 'Country', 'Jazz', 'Pop', 'Rock', 'Electronic', 'RnB', 'Hip-Hop', 'Folk', 'Blues', 'World', 'Metal', 'Reggae')),
+    PRIMARY KEY (product_ID)
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE movie(
+    product_ID INT REFERENCES product(product_ID),
+    director VARCHAR2(100) NOT NULL,
+    genre VARCHAR2(25) NOT NULL CHECK (genre IN ('Drama', 'Romance', 'Horror', 'Comedy', 'Action', 'Thriller', 'Animation', 'Sci-Fi', 'Fantasy', 'Adventure', 'Mystery', 'Documentary', 'Musical')),
+    PRIMARY KEY (product_ID)
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE cart_item
+(
+    account_ID INT REFERENCES account(account_ID),
+    product_ID INT REFERENCES product(product_ID),
+    quantity INT NOT NULL CHECK (quantity > 0),    
+    PRIMARY KEY (account_ID, product_ID)
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE review(
+    product_ID INT REFERENCES product(product_ID), 
+    account_ID INT REFERENCES account(account_ID), 
+    rating INT NOT NULL CHECK (rating IN (1,2,3,4,5)),
+    message VARCHAR2(400)
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE customer_order(
+    order_ID INT PRIMARY KEY,
+    account_ID INT REFERENCES account(account_ID), 
+    order_method VARCHAR2(25) NOT NULL CHECK (order_method IN ('Pickup', 'Delivery')),
+    status VARCHAR2(25) NOT NULL CHECK (status IN ('Delivering', 'Ready for Pickup', 'Preparing Order'))
+);";
+$created = mysqli_query($connect, $sql);
+
+$sql = "
+CREATE TABLE order_item(
+    product_ID INT REFERENCES product(product_ID), 
+    order_ID INT REFERENCES customer_order(order_ID),
+    quantity INT CHECK (quantity > 0),
+    PRIMARY KEY (order_ID, product_ID)
+);";
+$created = mysqli_query($connect, $sql);
+
+$info = "INSERT INTO account VALUES (1, 'john.doe@torontomu.ca');";
+$info .= "INSERT INTO account VALUES (2, 'store.manager@gmail.com');";
+$info .= "INSERT INTO account VALUES (3, 'lieu.pwa@torontomu.ca');";
+$info .= "INSERT INTO account VALUES (4, 'samba.jn@torontomu.ca');";
+$info .= "INSERT INTO account VALUES (5, 'slavabyrlev@gesthedu.com');";
+$info .= "INSERT INTO account VALUES (6, 'iceburg561@googl.win');";
+$info .= "INSERT INTO account VALUES (7, 'edupost@gmail.com');";
+$info .= "INSERT INTO account VALUES (8, 'roin.jkd@torontomu.ca');";
+$info .= "INSERT INTO account VALUES (9, 'sarah.rsd@torontomu.ca');";
+$info .= "INSERT INTO account VALUES (10, 'rlhubbl@nicnic.pro');";
+
+$info .= "INSERT INTO accountInfo VALUES (1, 'CUSTOMER','abc123','John', 'Doe', '555-555-5553','55 Hope Street');";
+$info .= "INSERT INTO accountInfo VALUES (2, 'MANAGER','123Owner','Jane', 'Doe', '111-123-1111','32 House Apt');";
+$info .= "INSERT INTO accountInfo VALUES (3, 'CUSTOMER','neighbour232','Lieu', 'Ben', '555-923-5545','49 Pond Street');";
+$info .= "INSERT INTO accountInfo VALUES (4, 'CUSTOMER','cardinal555','Samba', 'Jean', '491-923-5545','37 Lodge Street');";
+$info .= "INSERT INTO accountInfo VALUES (5, 'CUSTOMER','geklkdh12','Reenie', 'Dip', '484-736-0247','21 Plane Drive');";
+$info .= "INSERT INTO accountInfo VALUES (6, 'CUSTOMER','123457923s','George', 'Greep', '477-326-1710','11 Jane Apt');";
+$info .= "INSERT INTO accountInfo VALUES (7, 'MANAGER','aaabbbccc','Dean', 'Blunt', '930-350-1642','34 Dundas West');";
+$info .= "INSERT INTO accountInfo VALUES (8, 'CUSTOMER','robin23','Noah', 'Lennox', '491-283-2344','4 Edgar Drive');";
+$info .= "INSERT INTO accountInfo VALUES (9, 'CUSTOMER','cat3444','Sarah', 'Mili', '809-659-5135','10 Eldway Drive');";
+$info .= "INSERT INTO accountInfo VALUES (10, 'CUSTOMER','934829dog','Derek', 'White', '898-338-5439','51 West Ave');";
+
+$info .= "INSERT INTO product VALUES (2, 'Nemo', 2003, 'Nemo.png', 10.75, 80, 'An animated classic.');";
+$info .= "INSERT INTO product VALUES (1, 'The Shining', 2001, 'TS.png', 20.50, 70, 'A horror movie by Kubrick.');";
+$info .= "INSERT INTO product VALUES (3, 'Fight Club', 1999, 'FC.png', 6.99, 5, 'A 1999 action film.');";
+$info .= "INSERT INTO product VALUES (4, 'Fallen Angels', 1995, 'FA.png', 8.75, 9, '');";
+$info .= "INSERT INTO product VALUES (5, 'No Country for Old Men', 2007, 'NCFOM.png', 15.50, 32, 'A drama film.');";
+$info .= "INSERT INTO product VALUES (6, '2001: A Space Odyssey', 1968, '2001.png', 14.75, 16, 'A Sci-Fi film');";
+$info .= "INSERT INTO product VALUES (7, 'The Notebook', 2004, 'TNBK.png', 4.50, 22, 'A romance film.');";
+$info .= "INSERT INTO product VALUES (8, 'The Hangover', 2009, 'THO.png', 8.75, 41, 'A comedy film.');";
+$info .= "INSERT INTO product VALUES (9, 'Dead Poets Society', 1989, 'DPS.png', 11.50, 27, 'A drama film');";
+$info .= "INSERT INTO product VALUES (10, 'Psycho', 1960, 'PSYH.png', 12.75, 64, 'A horror film.');";
+
+$info .= "INSERT INTO movie VALUES (1, 'Stanley Kubrick', 'Horror');";
+$info .= "INSERT INTO movie VALUES (2, 'David Fincher', 'Animation');";
+$info .= "INSERT INTO movie VALUES (3, 'Stanley Kubrick', 'Action');";
+$info .= "INSERT INTO movie VALUES (4, 'Wong Kar-wai', 'Drama');";
+$info .= "INSERT INTO movie VALUES (5, 'Ethan Coen', 'Drama');";
+$info .= "INSERT INTO movie VALUES (6, 'Stanley Kubrick', 'Sci-Fi');";
+$info .= "INSERT INTO movie VALUES (7, 'Nick Cassavetes', 'Romance');";
+$info .= "INSERT INTO movie VALUES (8, 'Todd Phillips', 'Comedy');";
+$info .= "INSERT INTO movie VALUES (9, 'Peter Weir', 'Drama');";
+$info .= "INSERT INTO movie VALUES (10, 'Alfred Hitchcock', 'Horror');";
+
+$info .= "INSERT INTO product VALUES (11, 'Sung Tongs', 2004, 'SnTng.png', 10.50, 50, 'A folk album.');";
+$info .= "INSERT INTO product VALUES (12, 'Powders', 2023, 'Pwdrs.png', 13.75, 12, 'An electronic album by Eartheater.');";
+$info .= "INSERT INTO product VALUES (13, 'Nevermind', 1991, 'NVM.png', 10.50, 32, 'A rock album.');";
+$info .= "INSERT INTO product VALUES (14, 'Grace', 1994, 'Grace.png', 6.50, 11, 'A rock album.');";
+$info .= "INSERT INTO product VALUES (15, 'Strawberry Jam', 2007, 'STRJ.png', 17.99, 15, 'A pop album.');";
+$info .= "INSERT INTO product VALUES (16, 'Heartleap', 2014, 'HL.png', 25.00, 83, 'A folk album.');";
+$info .= "INSERT INTO product VALUES (17, 'Bleach', 1989, 'BLCH.png', 8.35, 42, 'A rock album.');";
+$info .= "INSERT INTO product VALUES (18, 'Testing', 2018, 'TsTng.png', 32.50, 29, 'A hip-hop album.');";
+$info .= "INSERT INTO product VALUES (19, 'Sound Sun Pleasure', 1959, 'SSP.png', 12.50, 6, 'A jazz album.');";
+$info .= "INSERT INTO product VALUES (20, '12 Golden Country Greats', 1996, '12CGs.png', 20.70, 14, 'A country album.');";
+
+$info .= "INSERT INTO music VALUES (11, 'Animal Collective', 'Folk');";
+$info .= "INSERT INTO music VALUES (12, 'Eartheater', 'Electronic');";
+$info .= "INSERT INTO music VALUES (13, 'Nirvana', 'Rock');";
+$info .= "INSERT INTO music VALUES (14, 'Jeff Buckley', 'Rock');";
+$info .= "INSERT INTO music VALUES (15, 'Animal Collective', 'Pop');";
+$info .= "INSERT INTO music VALUES (16, 'Vashti Bunyan', 'Folk');";
+$info .= "INSERT INTO music VALUES (17, 'Nirvana', 'Rock');";
+$info .= "INSERT INTO music VALUES (18, 'A$AP Rocky', 'Hip-Hop');";
+$info .= "INSERT INTO music VALUES (19, 'Sun Ra', 'Jazz');";
+$info .= "INSERT INTO music VALUES (20, 'Ween', 'Country');";
+
+$info .= "INSERT INTO review VALUES (3, 1, 5, 'I need more!');";
+$info .= "INSERT INTO review VALUES (4, 1, 4, 'Great product');";
+$info .= "INSERT INTO review VALUES (8, 1, 3, 'Ok product');";
+$info .= "INSERT INTO review VALUES (14, 1, 4, 'Good product');";
+$info .= "INSERT INTO review VALUES (17, 1, 3, 'Satisfactory product');";
+$info .= "INSERT INTO review VALUES (16, 2, 3, 'Satisfactory product');";
+
+$info .= "INSERT INTO cart_item VALUES (1, 3, 5);";
+$info .= "INSERT INTO cart_item VALUES (1, 4, 1);";
+$info .= "INSERT INTO cart_item VALUES (1, 8, 3);";
+$info .= "INSERT INTO cart_item VALUES (1, 14, 2);";
+$info .= "INSERT INTO cart_item VALUES (1, 17, 1);";
+$info .= "INSERT INTO cart_item VALUES (2, 16, 2);";
+
+$info .= "INSERT INTO customer_order VALUES (1, 1, 'Pickup', 'Ready for Pickup');";
+$info .= "INSERT INTO customer_order VALUES (2, 2, 'Delivery', 'Preparing Order');";
+$info .= "INSERT INTO customer_order VALUES (3, 3, 'Delivery', 'Delivering');";
+$info .= "INSERT INTO customer_order VALUES (4, 4, 'Pickup', 'Ready for Pickup');";
+$info .= "INSERT INTO customer_order VALUES (5, 5, 'Pickup', 'Preparing Order');";
+$info .= "INSERT INTO customer_order VALUES (6, 6, 'Pickup', 'Ready for Pickup');";
+$info .= "INSERT INTO customer_order VALUES (7, 7, 'Delivery', 'Delivering');";
+$info .= "INSERT INTO customer_order VALUES (8, 8, 'Pickup', 'Ready for Pickup');";
+$info .= "INSERT INTO customer_order VALUES (9, 9, 'Delivery', 'Delivering');";
+$info .= "INSERT INTO customer_order VALUES (10, 10, 'Pickup', 'Ready for Pickup');";
+
+$info .= "INSERT INTO order_item VALUES (2, 1, 1);";
+$info .= "INSERT INTO order_item VALUES (3, 2, 5);";
+$info .= "INSERT INTO order_item VALUES (4, 1, 2);";
+$info .= "INSERT INTO order_item VALUES (5, 7, 3);";
+$info .= "INSERT INTO order_item VALUES (6, 1, 2);";
+$info .= "INSERT INTO order_item VALUES (7, 1, 6);";
+$info .= "INSERT INTO order_item VALUES (8, 9, 4);";
+$info .= "INSERT INTO order_item VALUES (9, 3, 8);";
+$info .= "INSERT INTO order_item VALUES (10, 1, 2);";
+$info .= "INSERT INTO order_item VALUES (11, 1, 1);";
+
+if (mysqli_multi_query($connect, $info)) {
+print <<<HTMLCODE
+<header>
+SUCCESSFULLY POPULATED TABLE
+</header>
+<div>a</div>
+<section>
+HTMLCODE;
+} else {
+$errorMsg = mysqli_error($connect);
+print <<<HTMLCODE
+<header>
+FAILED TO POPULATE TABLE
+</header>
+<div>a</div>
+<section>
+<p>FAILED TO ADD: $info<br>$errorMsg</p>
+HTMLCODE;
+}
+mysqli_close($connect);
+?>
+    </section>
+</section>
+</body>
+</html>
