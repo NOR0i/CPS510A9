@@ -14,6 +14,23 @@
         font-size: 4vw;
         font-family: "Outfit";
     }
+
+
+    div {
+        background-color: rgb(41, 41, 41);
+        font-size: 0.3vw;
+        box-shadow: 0vw 0vw 0.2vw;
+        margin-top: 2vw;
+        margin-bottom: 2vw;
+        width: 90%;
+    }
+
+    p {
+        font-family: "Outfit";
+        text-shadow: none;
+        font-size: 2vw;
+        text-shadow: 0vw 0vw 0.1vw;
+    }
 </style>
 
 <body>
@@ -36,46 +53,10 @@
             <input type="submit" name="deleteTables" value="Delete Tables">
         </form>
 
-        <form action="" method="get">
+        <form target="_blank" action="CPS510A9QueryTable.php" method="get">
             <input type="submit" name="queryTables" value="Query Table">
         </form>
 
-    </section>
-
-
-    <section>
-        <?php
-        $host = "localhost";
-        $database = "s43ma";
-        $user = "s43ma";
-        $password = "Sm1053812!omu";
-        $connect = oci_connect(
-            $user,
-            $password,
-            '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
-        );
-
-        $sql = "SELECT * FROM account";
-
-        $stid = oci_parse($connect, $sql);
-        oci_execute($stid);
-        $nrows = oci_fetch_all($stid, $res);
-
-        echo "<table border='1'>\n";
-        foreach ($res as $col) {
-            echo "<tr>\n";
-            foreach ($col as $item) {
-                echo "    <td>" . ($item !== null ? htmlentities($item, ENT_QUOTES) : "") . "</td>\n";
-            }
-            echo "</tr>\n";
-        }
-        echo "</table>\n";
-
-        oci_free_statement($stid);
-        oci_close($conn);
-
-        oci_close($connect);
-        ?>
     </section>
 </body>
 
