@@ -48,53 +48,33 @@
         $host = "localhost";
         $database = "s43ma";
         $user = "s43ma";
-        $password = "mykjPExW";
-        $connect = mysqli_connect($host, $user, $password, $database);
+        $password = "Sm1053812!omu";
+        $connect = oci_connect(
+            $user,
+            $password,
+            '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
+        );
 
-        $sql = "SELECT * FROM account; ";
-        $sql .= "SELECT * FROM accountInfo;";
+        $sql = "SELECT * FROM account";
 
-        // Execute multi query
-        if (mysqli_multi_query($connect, $sql)) {
-            do {
-                print("waaaa");
-                // Store first result set
-                if ($result = mysqli_store_result($connect)) {
-                    $fields_num = mysqli_num_fields($result);
+        $stid = oci_parse($connect, $sql);
+        oci_execute($stid);
+        $nrows = oci_fetch_all($stid, $res);
 
-                    print("<table border='1'><tr>");
-                    // printing table headers
-                    for ($i = 0; $i < $fields_num; $i++) {
-                        $field = mysqli_fetch_field($result);
-                        print("<td>{$field->name}</td>");
-                    }
-                    print("</tr>\n");
-                    // printing table rows
-                    while ($row = mysqli_fetch_row($result)) {
-                        print("<tr>");
-
-                        foreach ($row as $cell)
-                            print("<td>$cell</td>");
-
-                        print("</tr>\n");
-                    }
-                    print("</table>");
-
-                    if (mysqli_more_results($connect)) {
-                        printf("-------------\n");
-                    }
-
-                    // Free result set
-                    mysqli_free_result($result);
-                    print("befree");
-                }
-            } while (mysqli_next_result($connect));
-        } else {
-            $errorMsg = mysqli_error($connect);
-            print($errorMsg);
+        echo "<table border='1'>\n";
+        foreach ($res as $col) {
+            echo "<tr>\n";
+            foreach ($col as $item) {
+                echo "    <td>" . ($item !== null ? htmlentities($item, ENT_QUOTES) : "") . "</td>\n";
+            }
+            echo "</tr>\n";
         }
+        echo "</table>\n";
 
-        mysqli_close($connect);
+        oci_free_statement($stid);
+        oci_close($conn);
+
+        oci_close($connect);
         ?>
     </section>
 </body>
