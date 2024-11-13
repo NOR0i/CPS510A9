@@ -43,10 +43,12 @@ p {
 $host = "localhost";
 $database = "s43ma";
 $user = "s43ma";
-$password = "mykjPExW";
-$connect = mysqli_connect($host, $user, $password, $database);
+$password = "Sm1053812!omu";
+$connect = oci_connect($user, $password,
+'(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))');
 
 if (!$connect) {
+$errorMsg = oci_error()['message'];
 print <<<HTMLCODE
 <header>
 CONNECTION FAILED
@@ -54,6 +56,9 @@ CONNECTION FAILED
 <div>a</div>
 <section>
 </section>
+<p>
+$errorMsg
+</p>
 </section>
 </body>
 </html>
@@ -63,103 +68,86 @@ return;
 
 $sql = "CREATE TABLE account(
 	account_id INT PRIMARY KEY,
-	email VARCHAR(100) NOT NULL UNIQUE
-);";
+	email VARCHAR(100) NOT NULL UNIQUE)";
+$stid = oci_parse($connect, $sql);
+$res = oci_execute($stid);
+if ($res) {
+print <<<HTMLCODE
+<p>
+SUCCESSFULLY CREATED TABLE ACCOUNT
+</p>
+<div>a</div>
+<section>
+HTMLCODE;
+} else {
+$errorMsg = oci_error($stid)['message'];
+print <<<HTMLCODE
+<p>
+FAILED TO CREATE TABLE ACCOUNT
+</p>
+<div>a</div>
+<section>
+<p>FAILED TO ADD: $sql<br>$errorMsg</p>
+HTMLCODE;
+}
 
-$sql .= "
-CREATE TABLE accountInfo(
+$sql .= "CREATE TABLE IF NOT EXISTS accountInfo(
     account_id INT PRIMARY KEY,
     account_type VARCHAR2(10) DEFAULT 'CUSTOMER' NOT NULL CHECK (account_type IN ('CUSTOMER', 'MANAGER')),
     password VARCHAR2(25) NOT NULL,
     first_name VARCHAR2(25) NOT NULL,
     last_name VARCHAR2(25) NOT NULL,
     phone_number VARCHAR2(20),
-    address VARCHAR2(100)
-);";
+    address VARCHAR2(100));";
 
 
-$sql .= "
-CREATE TABLE product(
+$sql .= "CREATE TABLE IF NOT EXISTS product(
     product_ID INT PRIMARY KEY,
     name VARCHAR2(50) NOT NULL,
     year INT NOT NULL CHECK (year > 0), 
     image VARCHAR2(25),
     price FLOAT NOT NULL,
     stock INT NOT NULL CHECK (stock > 0),
-    message VARCHAR2(200)
-);";
+    message VARCHAR2(200));";
 
-$sql .= "
-CREATE TABLE music(
+$sql .= "CREATE TABLE IF NOT EXISTS music(
     product_ID INT REFERENCES product(product_ID),
     artist VARCHAR2(100) NOT NULL,
     genre VARCHAR2(25) NOT NULL CHECK (genre IN ('Classical', 'Country', 'Jazz', 'Pop', 'Rock', 'Electronic', 'RnB', 'Hip-Hop', 'Folk', 'Blues', 'World', 'Metal', 'Reggae')),
-    PRIMARY KEY (product_ID)
-);";
+    PRIMARY KEY (product_ID));";
 
-$sql .= "
-CREATE TABLE movie(
+$sql .= "CREATE TABLE IF NOT EXISTS movie(
     product_ID INT REFERENCES product(product_ID),
     director VARCHAR2(100) NOT NULL,
     genre VARCHAR2(25) NOT NULL CHECK (genre IN ('Drama', 'Romance', 'Horror', 'Comedy', 'Action', 'Thriller', 'Animation', 'Sci-Fi', 'Fantasy', 'Adventure', 'Mystery', 'Documentary', 'Musical')),
-    PRIMARY KEY (product_ID)
-);";
+    PRIMARY KEY (product_ID));";
 
-$sql .= "
-CREATE TABLE cart_item
-(
+$sql .= "CREATE TABLE IF NOT EXISTS cart_item(
     account_ID INT REFERENCES account(account_ID),
     product_ID INT REFERENCES product(product_ID),
     quantity INT NOT NULL CHECK (quantity > 0),    
-    PRIMARY KEY (account_ID, product_ID)
-);";
+    PRIMARY KEY (account_ID, product_ID));";
 
-$sql .= "
-CREATE TABLE review(
+$sql .= "CREATE TABLE IF NOT EXISTS review(
     product_ID INT REFERENCES product(product_ID), 
     account_ID INT REFERENCES account(account_ID), 
     rating INT NOT NULL CHECK (rating IN (1,2,3,4,5)),
-    message VARCHAR2(400)
-);";
+    message VARCHAR2(400));";
 
-$sql .= "
-CREATE TABLE customer_order(
+$sql .= "CREATE TABLE IF NOT EXISTS customer_order(
     order_ID INT PRIMARY KEY,
     account_ID INT REFERENCES account(account_ID), 
     order_method VARCHAR2(25) NOT NULL CHECK (order_method IN ('Pickup', 'Delivery')),
-    status VARCHAR2(25) NOT NULL CHECK (status IN ('Delivering', 'Ready for Pickup', 'Preparing Order'))
-);";
+    status VARCHAR2(25) NOT NULL CHECK (status IN ('Delivering', 'Ready for Pickup', 'Preparing Order')));";
 
-$sql .= "
-CREATE TABLE order_item(
+$sql .= "CREATE TABLE IF NOT EXISTS order_item(
     product_ID INT REFERENCES product(product_ID), 
     order_ID INT REFERENCES customer_order(order_ID),
     quantity INT CHECK (quantity > 0),
-    PRIMARY KEY (order_ID, product_ID)
-);";
+    PRIMARY KEY (order_ID, product_ID));";
 
-$res = mysqli_multi_query($connect, $sql);
 
-if ($res) {
-print <<<HTMLCODE
-<header>
-SUCCESSFULLY CREATED TABLES
-</header>
-<div>a</div>
-<section>
-HTMLCODE;
-} else {
-$errorMsg = mysqli_error($connect);
-print <<<HTMLCODE
-<header>
-FAILED TO CREATE TABLES
-</header>
-<div>a</div>
-<section>
-<p>FAILED TO ADD: $sql<br>$errorMsg</p>
-HTMLCODE;
-}
-mysqli_close($connect);
+oci_close($connect);
 ?>
     </section>
 </section>
