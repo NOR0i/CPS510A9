@@ -1,3 +1,5 @@
+<html>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Archivo&family=Instrument+Serif&family=Jomolhari&family=Outfit&display=swap');
 
 ::-webkit-scrollbar {
@@ -58,14 +60,15 @@ HTMLCODE;
 return;
 }
 
-$del = "DROP TABLE ACCOUNT CASCADE CONSTRAINTS;";
-$del .= "DROP TABLE PRODUCT CASCADE CONSTRAINTS;";
-$del .= "DROP TABLE MUSIC CASCADE CONSTRAINTS;";
-$del .= "DROP TABLE MOVIE CASCADE CONSTRAINTS;";
-$del .= "DROP TABLE CART_ITEM CASCADE CONSTRAINTS;";
-$del .= "DROP TABLE REVIEW CASCADE CONSTRAINTS;";
-$del .= "DROP TABLE CUSTOMER_ORDER CASCADE CONSTRAINTS;";
-$del .= "DROP TABLE ORDER_ITEM CASCADE CONSTRAINTS;";
+$del = "DROP TABLE account CASCADE; ";
+$del .= "DROP TABLE accountInfo CASCADE; ";
+$del .= "DROP TABLE product CASCADE; ";
+$del .= "DROP TABLE music CASCADE; ";
+$del .= "DROP TABLE movie CASCADE; ";
+$del .= "DROP TABLE cart_item CASCADE; ";
+$del .= "DROP TABLE review CASCADE; ";
+$del .= "DROP TABLE customer_order CASCADE; ";
+$del .= "DROP TABLE order_item CASCADE; ";
 
 
 if (mysqli_multi_query($connect, $del)) {

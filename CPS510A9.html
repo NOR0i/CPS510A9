@@ -32,13 +32,52 @@
             <input type="submit" name="populateTables" value="Populate Tables">
         </form>
 
-        <form target="_blank" action="CPS510A9CreateTable.php" method="post">
+        <form target="_blank" action="CPS510A9DropTable.php" method="post">
             <input type="submit" name="deleteTables" value="Delete Tables">
         </form>
 
-        <form target="_blank" action="" method="post">
-            <input type="submit" name="queryTables" value="Query Tables">
+        <form action="" method="get">
+            <input type="submit" name="queryTables" value="Query Table">
         </form>
+
+    </section>
+
+
+    <section>
+<?php
+
+$sql = "SELECT * from account;";
+$result = mysqli_query($connect, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    $number = 0;
+    print('<section class="gallery">');
+    while ($row = mysqli_fetch_assoc($result)) {
+        $account_id = $row['account_id'];
+        $subject = $row['email'];
+        $location = $row['location'];
+        $url = $row['picture_url'];
+        $id = $row['id'];                            --LOOP THROUGH EACH COLUMN, PRINT EACH VAL UU. u_o
+
+        if ( $number == 0) {
+            print('<section class="container">');
+        }
+
+        if ($number == 1) {
+print <<<HTMLCODE
+<section class="picture lower" style="width: 30%;">
+<img src=$url
+width="100%">
+<section class="desc">
+<h2>$id. $subject</h2>
+<p>$date</p>
+<p>$location</p>
+</section>
+</section>
+HTMLCODE;
+}
+
+?>
 
     </section>
 </body>

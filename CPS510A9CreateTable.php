@@ -1,3 +1,6 @@
+<html>
+
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Archivo&family=Instrument+Serif&family=Jomolhari&family=Outfit&display=swap');
 
 ::-webkit-scrollbar {
@@ -135,7 +138,9 @@ CREATE TABLE order_item(
     PRIMARY KEY (order_ID, product_ID)
 );";
 
-if (mysqli_multi_query($connect, $sql)) {
+$res = mysqli_multi_query($connect, $sql);
+
+if ($res) {
 print <<<HTMLCODE
 <header>
 SUCCESSFULLY CREATED TABLES
