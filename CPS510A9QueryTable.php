@@ -15,7 +15,6 @@
         font-family: "Outfit";
     }
 
-
     div {
         background-color: rgb(41, 41, 41);
         font-size: 0.3vw;
@@ -31,11 +30,19 @@
         font-size: 2vw;
         text-shadow: 0vw 0vw 0.1vw;
     }
+
+    table {
+        font-family: 'Outfit';
+    }
+
+    td, th {
+        font-family: "Outfit";
+        padding: 4px;
+
+    }
 </style>
 
 <body>
-
-
 
     <section>
         <?php
@@ -105,6 +112,33 @@ HTMLCODE;
         print("<div>a</div><section><p>ACCOUNTINFO</p>");
         printTable($connect, $sql);
 
+        $sql = "SELECT * FROM product";
+        print("<div>a</div><section><p>PRODUCT</p>");
+        printTable($connect, $sql);
+
+        $sql = "SELECT * FROM music";
+        print("<div>a</div><section><p>MUSIC</p>");
+        printTable($connect, $sql);
+
+        $sql = "SELECT * FROM movie";
+        print("<div>a</div><section><p>MOVIE</p>");
+        printTable($connect, $sql);
+
+        $sql = "SELECT * FROM review";
+        print("<div>a</div><section><p>REVIEW</p>");
+        printTable($connect, $sql);
+
+        $sql = "SELECT * FROM cart_item";
+        print("<div>a</div><section><p>CART_ITEM</p>");
+        printTable($connect, $sql);
+
+        $sql = "SELECT * FROM customer_order";
+        print("<div>a</div><section><p>ACCOUNTINFO</p>");
+        printTable($connect, $sql);
+
+        $sql = "SELECT * FROM order_item";
+        print("<div>a</div><section><p>ORDER_ITEM</p>");
+        printTable($connect, $sql);
 
         oci_close($connect);
         ?>
