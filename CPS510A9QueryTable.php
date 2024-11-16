@@ -15,7 +15,6 @@
         font-family: "Outfit";
     }
 
-
     div {
         background-color: rgb(41, 41, 41);
         font-size: 0.3vw;
@@ -44,8 +43,6 @@
 </style>
 
 <body>
-
-
 
     <section>
         <?php
