@@ -31,6 +31,30 @@
         font-size: 2vw;
         text-shadow: 0vw 0vw 0.1vw;
     }
+
+    input {
+        font-family: "Outfit";
+        background-color: white;
+        border-style: none;
+        font-size: 1vw;
+        padding: 15px;
+        border: solid 4px black;
+        border-radius: 15px;
+        transition: color ease-in 0.2s, border-color ease-in 0.2s;
+    }
+
+    input:hover{
+        border-color: grey;
+        color: grey;
+    }
+
+    .buttons {
+        display:flex;
+        align-items: center;
+        justify-content: center;    
+        column-gap: 1.5vw;    
+        margin-top: 2vw;
+    }
 </style>
 
 <body>
@@ -40,7 +64,7 @@
         </header>
     </section>
 
-    <section>
+    <section class="buttons">
         <form target="_blank" action="CPS510A9CreateTable.php" method="post">
             <input type="submit" name="createTables" value="Create Tables">
         </form>
