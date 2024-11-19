@@ -39,6 +39,7 @@
     <section style="margin: 2vw;">
 
         <?php
+        //Create a connection
         $host = "localhost";
         $database = "s43ma";
         $user = "s43ma";
@@ -49,6 +50,7 @@
             '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
         );
 
+        //If the connection fails, display error message 
         if (!$connect) {
             $errorMsg = oci_error()['message'];
             print <<<HTMLCODE
@@ -68,21 +70,26 @@ HTMLCODE;
             return;
         }
 
-$del = "DROP TABLE ACCOUNT CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
+        //Function for dropping a table, takes in the connection, the sql statement and the table name (for visuals)
+        function DropTable($connect, $del, $tableName)
+        {
 
-if ($res) {
-print <<<HTMLCODE
+            //Parse the sql statement and execute
+            $stid = oci_parse($connect, $del);
+            $res = oci_execute($stid);
+
+            //If success, print success message, otherwise print error message
+            if ($res) {
+                print <<<HTMLCODE
 <div>a</div>
 <section>
 <p>
 SUCCESSFULLY REMOVED ACCOUNT
 </p>
 HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
+            } else {
+                $errorMsg = oci_error($stid)['message'];
+                print <<<HTMLCODE
 <div>a</div>
 <section>
 <p>
@@ -90,200 +97,18 @@ FAILED TO REMOVE ACCOUNT
 </p>
 <p>FAILED TO REMOVE: $del<br>$errorMsg</p>
 HTMLCODE;
-}
+            }
+        }
 
-$del = "DROP TABLE ACCOUNTINFO CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
+        //Dropping tables are all the same so we can iterate through the same statement, only changing the table name
+        $tables = array('ACCOUNT', 'ACCOUNTINFO', 'PRODUCT', 'MUSIC', 'MOVIE', 'CART_ITEM', 'REVIEW', 'CUSTOMER_ORDER', 'ORDER_ITEM');
+        foreach ($tables as $tableName) {
+            $del = "DROP TABLE $tableName CASCADE CONSTRAINTS";
+            DropTable($connect, $del, $tableName);
+        }
 
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REMOVED ACCOUNTINFO
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REMOVE ACCOUNTINFO
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
 
-$del = "DROP TABLE PRODUCT CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
-
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REMOVED PRODUCT
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REMOVE PRODUCT
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
-
-$del = "DROP TABLE MUSIC CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
-
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REMOVED MUSIC
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REMOVE MUSIC
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
-
-$del = "DROP TABLE MOVIE CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
-
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REMOVED MOVIE
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REMOVE MOVIE
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
-
-$del = "DROP TABLE CART_ITEM CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
-
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REMOVED CART_ITEM
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REMOVE CART_ITEM
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
-
-$del = "DROP TABLE REVIEW CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
-
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REVIEW ACCOUNT
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REVIEW ACCOUNT
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
-
-$del = "DROP TABLE CUSTOMER_ORDER CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
-
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REMOVED CUSTOMER_ORDER
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REMOVE CUSTOMER_ORDER
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
-
-$del = "DROP TABLE ORDER_ITEM CASCADE CONSTRAINTS";
-$stid = oci_parse($connect, $del);
-$res = oci_execute($stid);
-
-if ($res) {
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-SUCCESSFULLY REMOVED ORDER_ITEM
-</p>
-HTMLCODE;
-        } else {
-$errorMsg = oci_error($stid)['message'];
-print <<<HTMLCODE
-<div>a</div>
-<section>
-<p>
-FAILED TO REMOVE ORDER_ITEM
-</p>
-<p>FAILED TO REMOVE: $del<br>$errorMsg</p>
-HTMLCODE;
-}
-
+        //Close the connection
         oci_close($connect);
         ?>
     </section>

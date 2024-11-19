@@ -36,7 +36,8 @@
         font-family: 'Outfit';
     }
 
-    td, th {
+    td,
+    th {
         font-family: "Outfit";
         padding: 4px;
 
@@ -78,7 +79,7 @@
     </section>
 
     <section>
-        <?php 
+        <?php
         //Create the connection to the Database with credentials
         $host = "localhost";
         $database = "s43ma";
@@ -149,7 +150,7 @@ HTMLCODE;
         $table = $_GET["table"];
         $search = $_GET["search"];
 
-        
+
         if ($table == "") {
             //Print all the records in the Database
             $sql = "SELECT * FROM account";
@@ -187,7 +188,6 @@ HTMLCODE;
             $sql = "SELECT * FROM order_item";
             print("<div>a</div><section><p>ORDER_ITEM</p>");
             printTable($connect, $sql);
-
         } elseif ($table == "Account") {
             //Print all the Accounts in the Database
             //Or find an Account based on the specified account_id
@@ -196,12 +196,11 @@ HTMLCODE;
                 FROM account INNER JOIN accountinfo ON account.ACCOUNT_ID=accountinfo.ACCOUNT_ID";
             } else {
                 $sql = "SELECT account.account_id, account.email, accountinfo.account_type, accountInfo.first_name, accountInfo.last_name, accountInfo.phone_number, accountInfo.address
-                FROM account INNER JOIN accountinfo ON account.ACCOUNT_ID=accountinfo.ACCOUNT_ID WHERE account.account_id = " . $search;                
+                FROM account INNER JOIN accountinfo ON account.ACCOUNT_ID=accountinfo.ACCOUNT_ID WHERE account.account_id = " . $search;
             }
-            
+
             print("<div>a</div><section><p>ACCOUNT & ACCOUNT INFO</p>");
             printTable($connect, $sql);
-
         } elseif ($table == "Product") {
             //Print all the music products in the Database
             //Or find an music product based on the specified product name
@@ -210,9 +209,9 @@ HTMLCODE;
                 FROM product INNER JOIN music ON product.product_id = music.product_id";
             } else {
                 $sql = "SELECT product.product_id, product.name, music.artist, product.message, product.year, music.genre, product.price, product.stock
-                FROM product INNER JOIN music ON product.product_id = music.product_id WHERE product.name LIKE '" . $search . "%'";                  
+                FROM product INNER JOIN music ON product.product_id = music.product_id WHERE product.name LIKE '" . $search . "%'";
             }
-            
+
             print("<div>a</div><section><p>MUSIC PRODUCTS</p>");
             printTable($connect, $sql);
 
@@ -223,12 +222,11 @@ HTMLCODE;
                 FROM product INNER JOIN movie ON product.product_id = movie.product_id";
             } else {
                 $sql = "SELECT product.product_id, product.name, movie.director, product.message, product.year, movie.genre, product.price, product.stock
-                FROM product INNER JOIN movie ON product.product_id = movie.product_id WHERE product.name LIKE '" . $search . "%'";                  
+                FROM product INNER JOIN movie ON product.product_id = movie.product_id WHERE product.name LIKE '" . $search . "%'";
             }
 
             print("<div>a</div><section><p>MOVIE PRODUCTS</p>");
             printTable($connect, $sql);
-
         } elseif ($table == "Review") {
             //Print all the reviews in the Database with the product name
             //Or find a review based on the specified product name
@@ -239,10 +237,9 @@ HTMLCODE;
                 $sql = "SELECT product.product_id, product.name, review.account_id, review.rating, review.message
                 FROM product INNER JOIN review ON product.product_id = review.product_id WHERE product.name LIKE '" . $search . "%'";
             }
-            
+
             print("<div>a</div><section><p>REVIEWED PRODUCTS</p>");
             printTable($connect, $sql);
-
         } elseif ($table == "Customer_Order") {
             //Print all the customer orders with their order items in the database
             //Or find a customer order based on the specified order_id
@@ -253,7 +250,7 @@ HTMLCODE;
                 $sql = "SELECT customer_order.order_id, customer_order.account_id, customer_order.order_method, customer_order.status, order_item.product_id, order_item.quantity
                 FROM customer_order INNER JOIN order_item ON customer_order.order_id = order_item.order_id WHERE customer_order.order_id LIKE '" . $search . "%' ORDER BY customer_order.order_id ASC";
             }
-            
+
             print("<div>a</div><section><p>ORDERS</p>");
             printTable($connect, $sql);
         }
@@ -263,4 +260,5 @@ HTMLCODE;
         ?>
     </section>
 </body>
+
 </html>

@@ -1,54 +1,59 @@
 <html>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Archivo&family=Instrument+Serif&family=Jomolhari&family=Outfit&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Archivo&family=Instrument+Serif&family=Jomolhari&family=Outfit&display=swap');
 
-::-webkit-scrollbar {
-    display: none;
-}
+    ::-webkit-scrollbar {
+        display: none;
+    }
 
-body {
-    background-color: rgb(234, 234, 234);
-    color: rgb(41, 41, 41);
-    text-shadow: 0vw 0vw 0.2vw;
-    margin: 0;
-}
+    body {
+        background-color: rgb(234, 234, 234);
+        color: rgb(41, 41, 41);
+        text-shadow: 0vw 0vw 0.2vw;
+        margin: 0;
+    }
 
-header {
-    font-size: 6vw;
-    font-family: "Outfit";
-}
+    header {
+        font-size: 6vw;
+        font-family: "Outfit";
+    }
 
-div {
-    background-color: rgb(41, 41, 41);
-    font-size: 0.3vw;
-    box-shadow: 0vw 0vw 0.2vw;
-    margin-top: 2vw;
-    margin-bottom: 2vw;
-    width: 90%;
-}
+    div {
+        background-color: rgb(41, 41, 41);
+        font-size: 0.3vw;
+        box-shadow: 0vw 0vw 0.2vw;
+        margin-top: 2vw;
+        margin-bottom: 2vw;
+        width: 90%;
+    }
 
-p {
-    font-family: "Outfit";
-    text-shadow: none;
-    font-size: 2vw;
-    text-shadow: 0vw 0vw 0.1vw;
-}
+    p {
+        font-family: "Outfit";
+        text-shadow: none;
+        font-size: 2vw;
+        text-shadow: 0vw 0vw 0.1vw;
+    }
 </style>
 
 <body>
-<section style="margin: 2vw;">
+    <section style="margin: 2vw;">
 
-<?php
-$host = "localhost";
-$database = "s43ma";
-$user = "s43ma";
-$password = "Sm1053812!omu";
-$connect = oci_connect($user, $password,
-'(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))');
+        <?php
+        //Create a connection
+        $host = "localhost";
+        $database = "s43ma";
+        $user = "s43ma";
+        $password = "Sm1053812!omu";
+        $connect = oci_connect(
+            $user,
+            $password,
+            '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl)))'
+        );
 
-if (!$connect) {
-$errorMsg = oci_error()['message'];
-print <<<HTMLCODE
+        //If the connection fails, display error message 
+        if (!$connect) {
+            $errorMsg = oci_error()['message'];
+            print <<<HTMLCODE
 <header>
 CONNECTION FAILED
 </header>
@@ -62,9 +67,11 @@ $errorMsg
 </body>
 </html>
 HTMLCODE;
-return;
-}
-$info = "BEGIN
+            return;
+        }
+
+        //SQL statements for inserting 
+        $info = "BEGIN
  INSERT INTO account VALUES (1, 'john.doe@torontomu.ca');   
  INSERT INTO account VALUES (2, 'store.manager@gmail.com');   
  INSERT INTO account VALUES (3, 'lieu.pwa@torontomu.ca');  
@@ -168,20 +175,22 @@ $info = "BEGIN
  INSERT INTO order_item VALUES (11, 1, 1);
  END;";
 
-$stid = oci_parse($connect, $info);
-$res = oci_execute($stid);
+        //Parse and execute statement
+        $stid = oci_parse($connect, $info);
+        $res = oci_execute($stid);
 
-if ($res) {
-print <<<HTMLCODE
+        //If successful print success message, otherwise print errors
+        if ($res) {
+            print <<<HTMLCODE
 <header>
 SUCCESSFULLY POPULATED TABLE
 </header>
 <div>a</div>
 <section>
 HTMLCODE;
-} else {
-$errorMsg = oci_error($stid)["message"];
-print <<<HTMLCODE
+        } else {
+            $errorMsg = oci_error($stid)["message"];
+            print <<<HTMLCODE
 <header>
 FAILED TO POPULATE TABLE
 </header>
@@ -189,10 +198,11 @@ FAILED TO POPULATE TABLE
 <section>
 <p>FAILED TO ADD: $info<br>$errorMsg</p>
 HTMLCODE;
-}
-oci_close($connect);
-?>
+        }
+        oci_close($connect);
+        ?>
     </section>
-</section>
+    </section>
 </body>
+
 </html>
