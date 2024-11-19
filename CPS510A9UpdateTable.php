@@ -139,24 +139,36 @@ HTMLCODE;
             }
     }
 
+    function getSQLStatement($update, $add, $delete) {
+        $accountTableMethod = $_GET["accountTableMethod"];
+        switch ($accountTableMethod) {
+            case 'update':
+                $sql = $update;
+                break;
+            case 'add':
+                $sql = $add;
+                break;
+            case 'delete':
+                $sql = $delete;
+                break;
+            default:
+            $sql = "";
+        }
+
+        return $sql;
+    }
+
     $sql = "";
 
     if ($selectedTable == "Account") {
         $accountTableEmail = $_GET["accountTableEmail"];
         $accountId = $_GET["accountTableID"];
-        switch ($accountTableMethod) {
-            case 'update':
-                $sql = "UPDATE $selectedTable SET email = '$accountTableEmail' WHERE account_id = $accountId";
-                break;
-            case 'add':
-                $sql = " INSERT INTO account VALUES ($accountId, '$accountTableEmail')";
-                break;
-            case 'delete':
-                $sql = "DELETE FROM $selectedTable WHERE account_id = $accountId";
-                break;
-            default:
-            $sql = "";
-        }
+        $update = "UPDATE $selectedTable SET email = '$accountTableEmail' WHERE account_id = $accountId";
+        $add = "INSERT INTO account VALUES ($accountId, '$accountTableEmail')";
+        $delete = "DELETE FROM $selectedTable WHERE account_id = $accountId";
+
+        $sql = getSQLStatement($update, $add, $delete);
+
     } elseif ($selectedTable == "AccountInfo") {
         $accountId = $_GET["accountTableID"];
         $accountType = $_GET["accountType"];
@@ -165,27 +177,124 @@ HTMLCODE;
        $lastName = $_GET["lastName"];
        $address = $_GET["address"];
        $phoneNumber = $_GET["phoneNumber"];
-        switch ($accountTableMethod) {
-            case 'update':
-                $sql = "UPDATE $selectedTable 
-                SET 
-                account_type = '$accountType', 
-                password = '$password', 
-                first_name = '$firstName', 
-                last_name = '$lastName', 
-                phone_number = '$phoneNumber', 
-                address = '$address'
-                WHERE account_id = $accountId";
-                break;
-            case 'add':
-                $sql = "INSERT INTO $selectedTable VALUES ($accountId, '$accountType','$password','$firstName', '$lastName', '$phoneNumber','$address')";
-                break;
-            case 'delete':
-                $sql = "DELETE FROM $selectedTable WHERE account_id = $accountId";
-                break;
-            default:
-            $sql = "";
-        }
+
+        $update = "UPDATE $selectedTable 
+        SET 
+        account_type = '$accountType', 
+        password = '$password', 
+        first_name = '$firstName', 
+        last_name = '$lastName', 
+        phone_number = '$phoneNumber', 
+        address = '$address'
+        WHERE account_id = $accountId";
+        $add = "INSERT INTO $selectedTable VALUES ($accountId, '$accountType','$password','$firstName', '$lastName', '$phoneNumber','$address')";
+        $delete = "DELETE FROM $selectedTable WHERE account_id = $accountId";
+        
+        $sql = getSQLStatement($update, $add, $delete);
+
+    }  elseif ($selectedTable == "Product") {
+        $productID = $_GET["productID"];
+        $name = $_GET["name"];
+        $year = $_GET["year"];
+        $image = $_GET["image"];
+        $price = $_GET["price"];
+        $stock = $_GET["stock"];
+        $message = $_GET["message"];
+
+        $update = "UPDATE $selectedTable 
+        SET 
+        name = '$name', 
+        year = $year, 
+        image = '$image', 
+        price = $price, 
+        stock = $stock,
+        message = '$message'
+        WHERE product_id = $productID";
+        $add = "INSERT INTO $selectedTable VALUES ($productID, '$name',$year,'$image', $price, $stock,'$message')";
+        $delete = "DELETE FROM $selectedTable WHERE product_id = $productID";
+        
+        $sql = getSQLStatement($update, $add, $delete);
+    } elseif ($selectedTable == "Movie") {
+        $product_id = $_GET["product_id"];
+        $Director = $_GET["Director"];
+        $Genre = $_GET["Genre"];
+
+        $update = "UPDATE $selectedTable 
+        SET 
+        Director = '$Director', 
+        Genre = '$Genre'
+        WHERE product_id = $product_id";
+        $add = "INSERT INTO $selectedTable VALUES ($product_id, '$Director','$Genre')";
+        $delete = "DELETE FROM $selectedTable WHERE product_id = $product_id";
+
+        $sql = getSQLStatement($update, $add, $delete);
+
+    } elseif ($selectedTable == "Music") {
+        $productID = $_GET["productID"];
+        $Artist = $_GET["Artist"];
+        $Genre = $_GET["Genre"];
+
+        $update = "UPDATE $selectedTable 
+        SET 
+        Artist = '$Artist', 
+        Genre = '$Genre'
+        WHERE product_id = $productID";
+        $add = "INSERT INTO $selectedTable VALUES ($productID, '$Artist','$Genre')";
+        $delete = "DELETE FROM $selectedTable WHERE product_id = $productID";
+
+        $sql = getSQLStatement($update, $add, $delete);
+
+    } elseif ($selectedTable == "Review") {
+        $product_id = $_GET['product_id'];
+        $account_id = $_GET['account_id'];
+        $Rating = $_GET['Rating'];
+        $Message = $_GET['Message'];
+
+        $update = "UPDATE $selectedTable 
+        SET 
+        Rating = $Rating, 
+        Message = '$Message'
+        WHERE product_id = $product_id AND account_id = $account_id";
+        $add = "INSERT INTO $selectedTable VALUES ($product_id, $account_id, $Rating,'$Message')";
+        $delete = "DELETE FROM $selectedTable WHERE product_id = $product_id AND account_id = $account_id";
+
+        $sql = getSQLStatement($update, $add, $delete);
+
+    } elseif ($selectedTable == "Cart_Item") {
+        $product_id = $_GET['product_id'];
+        $account_id = $_GET['account_id'];
+        $Quantity = $_GET['Quantity'];
+
+        $update = "UPDATE $selectedTable SET Quantity = '$Quantity'
+        WHERE product_id = $product_id AND account_id = $account_id";
+        $add = "INSERT INTO $selectedTable VALUES ($product_id, $account_id, $Quantity)";
+        $delete = "DELETE FROM $selectedTable WHERE product_id = $product_id AND account_id = $account_id";
+
+        $sql = getSQLStatement($update, $add, $delete);
+    
+    } elseif ($selectedTable == "Customer_Order") {
+        $order_id = $_GET['order_id'];
+        $account_id = $_GET['account_id'];
+        $Order_Method = $_GET['Order_Method'];
+        $Status = $_GET['Status'];
+
+        $update = "UPDATE $selectedTable SET account_id = $account_id, Order_Method = '$Order_Method', Status = '$Status' WHERE order_id = $order_id";
+        $add = "INSERT INTO $selectedTable VALUES ($order_id, $account_id, '$Order_Method','$Status')";
+        $delete = "DELETE FROM $selectedTable WHERE order_id = $order_id";
+
+        $sql = getSQLStatement($update, $add, $delete);
+    } elseif ($selectedTable == "Order_Item") {
+        $product_id = $_GET['product_id'];
+        $order_id = $_GET['order_id'];
+        $Quantity = $_GET['Quantity'];
+
+        $update = "UPDATE $selectedTable SET Quantity = '$Quantity'
+        WHERE product_id = $product_id AND order_id = $order_id";
+        $add = "INSERT INTO $selectedTable VALUES ($product_id, $order_id, $Quantity)";
+        $delete = "DELETE FROM $selectedTable WHERE product_id = $product_id AND order_id = $order_id";
+
+        $sql = getSQLStatement($update, $add, $delete);
+    
     }
 
     UpdateTable($connect, $sql);
@@ -255,7 +364,7 @@ printRecords($connect, "Product");
 ?>
 <section>
     <br>
-    Manage Account
+    Manage Product
     <form name="accountTable">
     <select name="accountTableMethod" id="table">
                 <option value="">---</option>
@@ -265,8 +374,18 @@ printRecords($connect, "Product");
             </select>
         Product ID
         <input name="productID"  type="text"/>
-        Email
-        <input name="accountTableEmail" type="text"/>
+        Name
+        <input name="name" type="text"/>
+        Year
+        <input name="year" type="text"/>
+        Image
+        <input name="image" type="text"/>
+        Price
+        <input name="price" type="text"/>
+        Stock
+        <input name="stock" type="text"/>
+        Message
+        <input name="message" type="text"/>
         <input type="submit" name="table" value="Update Product" >
     </form>
 </section>
@@ -275,9 +394,146 @@ printRecords($connect, "Product");
 printRecords($connect, "Movie");
 ?>
 
+<section>
+    <br>
+    Manage Movie
+    <form name="accountTable">
+    <select name="accountTableMethod" id="table">
+                <option value="">---</option>
+                <option value="add">Add</option>
+                <option value="delete">Delete</option>
+                <option value="update">Update</option>
+            </select>
+        Product ID
+        <input name="product_id"  type="text"/>
+        Director
+        <input name="Director"  type="text"/>
+        Genre
+        <input name="Genre"  type="text"/>
+        <input type="submit" name="table" value="Update Movie" >
+    </form>
+</section>
+
 <?php
 printRecords($connect, "Music");
 ?>
+<section>
+    <br>
+    Manage Music
+    <form name="accountTable">
+    <select name="accountTableMethod" id="table">
+                <option value="">---</option>
+                <option value="add">Add</option>
+                <option value="delete">Delete</option>
+                <option value="update">Update</option>
+            </select>
+        Product ID
+        <input name="productID"  type="text"/>
+        Artist
+        <input name="Artist"  type="text"/>
+        Genre
+        <input name="Genre"  type="text"/>
+        <input type="submit" name="table" value="Update Music" >
+    </form>
+</section>
+
+
+<?php
+printRecords($connect, "Review");
+?>
+
+<section>
+    <br>
+    Manage Review
+    <form name="accountTable">
+    <select name="accountTableMethod" id="table">
+                <option value="">---</option>
+                <option value="add">Add</option>
+                <option value="delete">Delete</option>
+                <option value="update">Update</option>
+            </select>
+        Product ID
+        <input name="product_id"  type="text"/>
+        Account ID
+        <input name="account_id"  type="text"/>
+        Rating
+        <input name="Rating"  type="text"/>
+        Message
+        <input name="Message"  type="text"/>
+        <input type="submit" name="table" value="Update Review" >
+    </form>
+</section>
+
+<?php
+printRecords($connect, "Cart_Item");
+?>
+<section>
+    <br>
+    Manage Cart_Item
+    <form name="accountTable">
+    <select name="accountTableMethod" id="table">
+                <option value="">---</option>
+                <option value="add">Add</option>
+                <option value="delete">Delete</option>
+                <option value="update">Update</option>
+            </select>
+        Product ID
+        <input name="product_id"  type="text"/>
+        Account ID
+        <input name="account_id"  type="text"/>
+        Quantity
+        <input name="Quantity"  type="text"/>
+        <input type="submit" name="table" value="Update Cart_Item" >
+    </form>
+</section>
+
+<?php
+printRecords($connect, "Customer_Order");
+?>
+<section>
+    <br>
+    Manage Customer_Order
+    <form name="accountTable">
+    <select name="accountTableMethod" id="table">
+                <option value="">---</option>
+                <option value="add">Add</option>
+                <option value="delete">Delete</option>
+                <option value="update">Update</option>
+            </select>
+        Order ID
+        <input name="order_id"  type="text"/>
+        Account ID
+        <input name="account_id"  type="text"/>
+        Order_Method
+        <input name="Order_Method"  type="text"/>
+        Status
+        <input name="Status"  type="text"/>
+        <input type="submit" name="table" value="Update Customer_Order" >
+    </form>
+</section>
+
+<?php
+printRecords($connect, "Order_Item");
+?>
+<section>
+    <br>
+    Manage Order_Item
+    <form name="accountTable">
+    <select name="accountTableMethod" id="table">
+                <option value="">---</option>
+                <option value="add">Add</option>
+                <option value="delete">Delete</option>
+                <option value="update">Update</option>
+            </select>
+        Product ID
+        <input name="product_id"  type="text"/>
+        Order ID
+        <input name="order_id"  type="text"/>
+        Quantity
+        <input name="Quantity"  type="text"/>
+        <input type="submit" name="table" value="Update Order_Item" >
+    </form>
+</section>
 
 <?php
 //close the sql connection
