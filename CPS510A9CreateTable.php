@@ -93,7 +93,7 @@ HTMLCODE;
 }
 
 $sql = "CREATE TABLE accountInfo(
-    account_id INT PRIMARY KEY,
+    account_id INT REFERENCES account(account_id),
     account_type VARCHAR2(10) DEFAULT 'CUSTOMER' NOT NULL CHECK (account_type IN ('CUSTOMER', 'MANAGER')),
     password VARCHAR2(25) NOT NULL,
     first_name VARCHAR2(25) NOT NULL,

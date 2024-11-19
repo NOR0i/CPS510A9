@@ -81,6 +81,10 @@
             <input type="submit" name="queryTables" value="Query Table">
         </form>
 
+        <form target="_blank" action="CPS510A9UpdateTable.php" method="get">
+            <input type="submit" name="updateTables" value="Manage Table">
+        </form>
+
     </section>
 </body>
 

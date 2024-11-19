@@ -61,6 +61,23 @@
     </section>
 
     <section>
+        Update Value
+        <form>
+            <select name="updateTable" id="updateTable">
+                <option value="Account">Account</option>
+                <option value="AccountInfo">AccountInfo</option>
+                <option value="Music">Music</option>
+                <option value="Music">Movie</option>
+                <option value="Review">Review</option>
+                <option value="Customer_Order">Customer_Order</option>
+                <option value="order_item">Order_item</option>
+            </select>
+            <input name="search" type="search" value="">
+            <input type="submit">
+        </form>
+    </section>
+
+    <section>
         <?php 
         //Create the connection to the Database with credentials
         $host = "localhost";
