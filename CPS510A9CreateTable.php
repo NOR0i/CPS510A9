@@ -77,23 +77,23 @@ HTMLCODE;
             $stid = oci_parse($connect, $sql);
             $res = oci_execute($stid);
             if ($res) {
-                print <<<HTMLCODE
-    <div>a</div>
-    <section>
-    <p>
-    SUCCESSFULLY CREATED TABLE $tableName
-    </p>
-    HTMLCODE;
+print <<<HTMLCODE
+<div>a</div>
+<section>
+<p>
+SUCCESSFULLY CREATED TABLE $tableName
+</p>
+HTMLCODE;
             } else {
                 $errorMsg = oci_error($stid)['message'];
                 print <<<HTMLCODE
-    <div>a</div>
-    <section>
-    <p>
-    FAILED TO CREATE TABLE $tableName
-    </p>
-    <p>FAILED TO ADD: $sql<br>$errorMsg</p>
-    HTMLCODE;
+<div>a</div>
+<section>
+<p>
+FAILED TO CREATE TABLE $tableName
+</p>
+<p>FAILED TO ADD: $sql<br>$errorMsg</p>
+HTMLCODE;
             }
         }
 

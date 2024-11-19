@@ -53,7 +53,7 @@
         //If the connection fails, display error message 
         if (!$connect) {
             $errorMsg = oci_error()['message'];
-            print <<<HTMLCODE
+print <<<HTMLCODE
 <header>
 CONNECTION FAILED
 </header>
@@ -181,7 +181,7 @@ HTMLCODE;
 
         //If successful print success message, otherwise print errors
         if ($res) {
-            print <<<HTMLCODE
+print <<<HTMLCODE
 <header>
 SUCCESSFULLY POPULATED TABLE
 </header>
@@ -190,7 +190,7 @@ SUCCESSFULLY POPULATED TABLE
 HTMLCODE;
         } else {
             $errorMsg = oci_error($stid)["message"];
-            print <<<HTMLCODE
+print <<<HTMLCODE
 <header>
 FAILED TO POPULATE TABLE
 </header>

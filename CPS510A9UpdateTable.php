@@ -62,7 +62,7 @@
     //If connection fails, display UI which prints the error
     if (!$connect) {
         $errorMsg = oci_error()['message'];
-        print <<<HTMLCODE
+print <<<HTMLCODE
 <header>
 CONNECTION FAILED
 </header>

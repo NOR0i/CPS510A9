@@ -53,7 +53,7 @@
         //If the connection fails, display error message 
         if (!$connect) {
             $errorMsg = oci_error()['message'];
-            print <<<HTMLCODE
+print <<<HTMLCODE
 <header>
 CONNECTION FAILED
 </header>
@@ -80,7 +80,7 @@ HTMLCODE;
 
             //If success, print success message, otherwise print error message
             if ($res) {
-                print <<<HTMLCODE
+print <<<HTMLCODE
 <div>a</div>
 <section>
 <p>
@@ -89,7 +89,7 @@ SUCCESSFULLY REMOVED ACCOUNT
 HTMLCODE;
             } else {
                 $errorMsg = oci_error($stid)['message'];
-                print <<<HTMLCODE
+print <<<HTMLCODE
 <div>a</div>
 <section>
 <p>
